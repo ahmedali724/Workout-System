@@ -1,0 +1,54 @@
+# Ignore build artifacts
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/compile_commands.json
+Makefile
+
+# Object files, libraries, executables
+*.o
+*.obj
+*.so
+*.dll
+*.exe
+*.lib
+*.a
+*.pdb
+*.ilk
+
+# Dependency files and generated lists
+*.d
+*.dSYM/
+
+# CMake generated files
+CMakeFiles/
+CMakeLists.txt.user
+
+# IDEs and editors
+.vscode/
+.idea/
+.VS/
+*.suo
+*.user
+*.userosscache
+*.VC.db
+
+# Mac / Windows
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Logs
+*.log
+
+# ignore build output from g++ (common on Windows setup)
+*.exe
+
+# Backup files
+*~
+# Vim swap
+.swp
+
+# OneDrive temp files
+~$*

@@ -1,0 +1,26 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(FitnessGo)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Collect all .cpp files
+file(GLOB_RECURSE SOURCES
+    main.cpp
+    Model/*.cpp
+    UI/*.cpp
+    Service/*.cpp
+    Utils/*.cpp
+)
+
+# Create executable
+add_executable(FitnessGo ${SOURCES})
+
+# Tell the compiler where to find header files
+target_include_directories(FitnessGo PRIVATE
+    Model
+    UI
+    Service
+    Utils
+)
