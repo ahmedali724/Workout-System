@@ -66,7 +66,10 @@ __        __   _                            _
         {
             // Add fields and handle input
             vector<string> results = tui::addMultiTextField(fieldX, fieldY, fieldLenVec, 2, sRange, eRange, initialData);
-
+            if (results.empty())
+            {
+                return ScreenData<NoData>{Screen::Welcome, NoData{}};
+            }
             initialData = results;
 
             if (authService.login(results[0], results[1]) != nullopt)
@@ -79,6 +82,113 @@ __        __   _                            _
                 tui::drawHLine(errX, errY, fieldLen + 1, ' ');
                 tui::printAt(errX, errY, errorMessage, 12);
             }
+        }
+    }
+
+    ScreenData<NoData> RegisterScreen()
+    {
+        system("cls");
+
+        int startX = 10, startY = 4;
+        int fieldLen = 22;
+
+        // Title
+        tui::printAt(startX, startY, "=== Register New Account ===", 14);
+
+        // Labels
+        tui::printAt(startX, startY + 2, "Username:", 7);
+        tui::printAt(startX, startY + 4, "Password:", 7);
+        tui::printAt(startX, startY + 6, "Email:", 7);
+        tui::printAt(startX, startY + 8, "Name:", 7);
+        tui::printAt(startX, startY + 10, "Age:", 7);
+        tui::printAt(startX, startY + 12, "Gender (Male/Female):", 7);
+        tui::printAt(startX, startY + 14, "Role (Trainee/Trainer):", 7);
+
+        // Error message area
+        int errX = startX;
+        int errY = startY + 17;
+        string errorMessage = "";
+
+        // Controller instructions
+        tui::printAt(startX, errY + 2, "UP/DOWN: Navigate   ENTER: Submit", 8);
+        tui::drawHLine(startX, errY + 3, 50, '-');
+
+        // Multi-field configuration
+        vector<int> fieldX = {
+            startX + 26,
+            startX + 26,
+            startX + 26,
+            startX + 26,
+            startX + 26,
+            startX + 26,
+            startX + 26};
+
+        vector<int> fieldY = {
+            startY + 2,
+            startY + 4,
+            startY + 6,
+            startY + 8,
+            startY + 10,
+            startY + 12,
+            startY + 14};
+
+        vector<int> fieldLenVec(7, fieldLen);
+        vector<char> sRange(7, '!');
+        vector<char> eRange(7, '~');
+
+        vector<string> initialData = {};
+
+        while (true)
+        {
+            vector<string> results =
+                tui::addMultiTextField(
+                    fieldX,
+                    fieldY,
+                    fieldLenVec,
+                    7,
+                    sRange,
+                    eRange,
+                    initialData);
+
+            if (results.empty())
+            {
+                return ScreenData<NoData>{Screen::Welcome, NoData{}};
+            }
+
+            initialData = results;
+
+            try
+            {
+                int age = stoi(results[4]);
+
+                User newUser(
+                    0,          // ID ignored (auto-generated)
+                    results[0], // username
+                    results[1], // password
+                    results[2], // email
+                    results[3], // name
+                    age,
+                    results[5], // gender
+                    results[6]  // role
+                );
+
+                if (authService.registerUser(newUser) > 0)
+                {
+                    return ScreenData<NoData>{Screen::Login, NoData{}};
+                }
+                else
+                {
+                    errorMessage = "Registration failed. check inputs please!";
+                }
+            }
+            catch (...)
+            {
+                errorMessage = "Age must be a valid number!";
+            }
+
+            // Clear & show error
+            tui::drawHLine(errX, errY, 60, ' ');
+            tui::printAt(errX, errY, errorMessage, 12);
         }
     }
 };

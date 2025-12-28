@@ -25,7 +25,7 @@ int main()
 
     AuthUI authUI(authService);
 
-    ScreenData<NoData> current{Screen::Welcome, NoData{}};
+    ScreenData<NoData> current{Screen::Register, NoData{}};
 
     while (current.nextScreen != Screen::Exit)
     {
@@ -36,6 +36,9 @@ int main()
             break;
         case Screen::Login:
             current = authUI.LoginScreen();
+            break;
+        case Screen::Register:
+            current = authUI.RegisterScreen();
             break;
         }
     }

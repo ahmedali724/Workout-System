@@ -249,6 +249,7 @@ namespace tui
                     cursor = 0;
                     currentLine = (currentLine + 1) % nLines;
                 }
+
                 else if (key == 83)
                 {
                     if (cursor < (int)dataLines[currentLine].size())
@@ -277,6 +278,11 @@ namespace tui
             else if (key == 13)
             {
                 return dataLines;
+            }
+
+            else if (key == 27)
+            {
+                return {};
             }
             else if (key >= sRange[currentLine] && key <= eRange[currentLine])
             {
@@ -320,4 +326,3 @@ namespace tui
         }
     }
 }
-
