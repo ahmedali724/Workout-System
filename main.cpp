@@ -3,9 +3,12 @@
 #include "Database.hpp"
 #include <conio.h>
 #include <AuthService.hpp>
+#include <ExerciseService.hpp>
 #include <User.hpp>
 #include "ScreenData.hpp"
 #include "AuthUI.hpp"
+#include "ExerciseUI.hpp"
+#include <any>
 
 using namespace std;
 
@@ -18,14 +21,16 @@ int main()
 
     DB db("fitnessGo.db");
     AuthService authService(db);
+    ExerciseService exerciseService(db);
 
     // User u{0, "youssef", "1234", "youssef@example.com", "Youssef Ahmed", 22, "Male", "Trainee"};
     // int rows = auth.registerUser(u);
     // cout<<rows;
 
     AuthUI authUI(authService);
+    ExerciseUI exerciseUI(exerciseService);
 
-    ScreenData<NoData> current{Screen::Welcome, NoData{}};
+    ScreenData current{Screen::Welcome, NoData{}};
 
     while (current.nextScreen != Screen::Exit)
     {
@@ -39,6 +44,11 @@ int main()
             break;
         case Screen::Register:
             current = authUI.RegisterScreen();
+            break;
+        case Screen::ExerciseDetail:
+            current = exerciseUI.ExerciseDetailScreen(any_cast<int>(current.data));
+        case Screen::ExerciseList:
+            current = exerciseUI.ExerciseListScreen();
             break;
         }
     }

@@ -13,7 +13,7 @@ public:
     {
     }
 
-    ScreenData<NoData> WelcomeScreen()
+    ScreenData WelcomeScreen()
     {
         system("cls");
 
@@ -57,17 +57,17 @@ public:
         switch (choice)
         {
         case 0:
-            return ScreenData<NoData>{Screen::Login, NoData{}};
+            return ScreenData{Screen::Login, NoData{}};
 
         case 1:
-            return ScreenData<NoData>{Screen::Register, NoData{}};
+            return ScreenData{Screen::Register, NoData{}};
 
         default:
-            return ScreenData<NoData>{Screen::Exit, NoData{}};
+            return ScreenData{Screen::Exit, NoData{}};
         }
     }
 
-    ScreenData<NoData> LoginScreen()
+    ScreenData LoginScreen()
     {
         system("cls");
         int startX = 10, startY = 5;
@@ -105,13 +105,13 @@ public:
             vector<string> results = tui::addMultiTextField(fieldX, fieldY, fieldLenVec, 2, sRange, eRange, initialData);
             if (results.empty())
             {
-                return ScreenData<NoData>{Screen::Welcome, NoData{}};
+                return ScreenData{Screen::Welcome, NoData{}};
             }
             initialData = results;
 
             if (authService.login(results[0], results[1]) != nullopt)
             {
-                return ScreenData<NoData>{Screen::Welcome, NoData{}};
+                return ScreenData{Screen::Welcome, NoData{}};
             }
             else
             {
@@ -122,7 +122,7 @@ public:
         }
     }
 
-    ScreenData<NoData> RegisterScreen()
+    ScreenData RegisterScreen()
     {
         system("cls");
 
@@ -189,7 +189,7 @@ public:
 
             if (results.empty())
             {
-                return ScreenData<NoData>{Screen::Welcome, NoData{}};
+                return ScreenData{Screen::Welcome, NoData{}};
             }
 
             initialData = results;
@@ -211,7 +211,7 @@ public:
 
                 if (authService.registerUser(newUser) > 0)
                 {
-                    return ScreenData<NoData>{Screen::Login, NoData{}};
+                    return ScreenData{Screen::Login, NoData{}};
                 }
                 else
                 {

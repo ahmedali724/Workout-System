@@ -1,4 +1,5 @@
 #pragma once
+#include <any>
 
 enum class Screen
 {
@@ -6,15 +7,16 @@ enum class Screen
     Login,
     Register,
     MainMenu,
+    ExerciseList,
+    ExerciseDetail,
     Exit
 
 };
 
-template<typename T>
 struct ScreenData
 {
     Screen nextScreen;
-    T data;
+    std::any data;
 };
 
 struct NoData {};
