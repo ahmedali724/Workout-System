@@ -9,4 +9,9 @@ CREATE TABLE IF NOT EXISTS Users (
     role TEXT NOT NULL CHECK(role IN ('Trainee', 'Trainer', 'Admin'))
 );
 
-
+CREATE TABLE IF NOT EXISTS Exercise (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT DEFAULT '',
+    path TEXT DEFAULT ''
+);
