@@ -13,7 +13,7 @@ public:
     std::string role;   // "Trainee", "Trainer", or "Admin"
 
     // Constructors
-    User(int _id = 0, const std::string& _username, const std::string& _password,
+    User(int _id, const std::string& _username, const std::string& _password,
          const std::string& _email, const std::string& _name,
          int _age, const std::string& _gender, const std::string& _role)
         : id(_id), username(_username), password(_password),
