@@ -12,6 +12,7 @@ file(GLOB_RECURSE SOURCES
     UI/*.cpp
     Service/*.cpp
     Utils/*.cpp
+    Utils/*.c
 )
 
 # Create executable
