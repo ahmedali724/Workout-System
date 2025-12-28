@@ -25,3 +25,13 @@ target_include_directories(FitnessGo PRIVATE
     Service
     Utils
 )
+
+
+# Copy SQLite DB
+add_custom_command(TARGET FitnessGo POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_SOURCE_DIR}/fitnessGo.db
+        $<TARGET_FILE_DIR:FitnessGo>/fitnessGo.db
+)
+
+
