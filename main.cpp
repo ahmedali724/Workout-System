@@ -17,13 +17,13 @@ int main()
 {
 
     DB db("fitnessGo.db");
-    AuthService auth(db);
+    AuthService authService(db);
 
     // User u{0, "youssef", "1234", "youssef@example.com", "Youssef Ahmed", 22, "Male", "Trainee"};
     // int rows = auth.registerUser(u);
     // cout<<rows;
 
-    AuthUI authUI;
+    AuthUI authUI(authService);
 
     ScreenData<NoData> current{Screen::Welcome, NoData{}};
 
@@ -33,6 +33,9 @@ int main()
         {
         case Screen::Welcome:
             current = authUI.WelcomeScreen();
+            break;
+        case Screen::Login:
+            current = authUI.LoginScreen();
             break;
         }
     }

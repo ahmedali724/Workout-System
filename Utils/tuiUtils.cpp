@@ -220,8 +220,7 @@ namespace tui
                 {
                     if (cursor == 0)
                     {
-                        currentLine = (currentLine - 1 + nLines) % nLines;
-                        cursor = 0;
+                        continue;
                     }
                     else
                         cursor--;
@@ -230,8 +229,7 @@ namespace tui
                 {
                     if (cursor == (int)dataLines[currentLine].size())
                     {
-                        currentLine = (currentLine + 1) % nLines;
-                        cursor = 0;
+                        continue;
                     }
                     else
                         cursor++;
@@ -244,12 +242,12 @@ namespace tui
                 else if (key == 72)
                 {
                     cursor = 0;
-                    currentLine = (currentLine - 2 + nLines) % nLines;
+                    currentLine = (currentLine - 1 + nLines) % nLines;
                 }
                 else if (key == 80)
                 {
                     cursor = 0;
-                    currentLine = (currentLine + 2) % nLines;
+                    currentLine = (currentLine + 1) % nLines;
                 }
                 else if (key == 83)
                 {
