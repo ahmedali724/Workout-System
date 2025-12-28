@@ -2,10 +2,12 @@
 
 enum class Screen
 {
+    Welcome,
     Login,
     Register,
     MainMenu,
     Exit
+
 };
 
 template<typename T>
