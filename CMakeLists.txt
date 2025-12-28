@@ -34,4 +34,10 @@ add_custom_command(TARGET FitnessGo POST_BUILD
         $<TARGET_FILE_DIR:FitnessGo>/fitnessGo.db
 )
 
+# Copy the 'frames' folder to the executable directory after build
+add_custom_command(TARGET FitnessGo POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/AsciFrames
+        $<TARGET_FILE_DIR:FitnessGo>/AsciFrames
+)
 

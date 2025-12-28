@@ -25,7 +25,7 @@ int main()
 
     AuthUI authUI(authService);
 
-    ScreenData<NoData> current{Screen::Register, NoData{}};
+    ScreenData<NoData> current{Screen::Welcome, NoData{}};
 
     while (current.nextScreen != Screen::Exit)
     {

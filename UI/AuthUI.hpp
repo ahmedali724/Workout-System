@@ -4,7 +4,6 @@
 #include <conio.h>
 #include <vector>
 #include <string>
-
 using namespace std;
 class AuthUI
 {
@@ -17,17 +16,55 @@ public:
     ScreenData<NoData> WelcomeScreen()
     {
         system("cls");
-        std::cout << R"(
-__        __   _                            _ 
-\ \      / /__| | ___ ___  _ __ ___   ___  | |
- \ \ /\ / / _ \ |/ __/ _ \| '_ ` _ \ / _ \ | |
-  \ V  V /  __/ | (_| (_) | | | | | |  __/ |_|
-   \_/\_/ \___|_|\___\___/|_| |_| |_|\___| (_)
-)" << std::endl;
 
-        std::cout << "Press Any Key to Continue...";
-        getch();
-        return ScreenData<NoData>{Screen::Login, NoData{}};
+        // Layout base
+        const int startX = 10;
+        const int startY = 2;
+        const int contentWidth = 50;
+
+        // ASCII Logo
+        tui::printAt(startX, startY, R"(__        __   _                            _ )");
+        tui::printAt(startX, startY + 1, R"(\ \      / /__| | ___ ___  _ __ ___   ___  | |)");
+        tui::printAt(startX, startY + 2, R"( \ \ /\ / / _ \ |/ __/ _ \| '_ ` _ \ / _ \ | |)");
+        tui::printAt(startX, startY + 3, R"(  \ V  V /  __/ | (_| (_) | | | | | |  __/ |_|)");
+        tui::printAt(startX, startY + 4, R"(   \_/\_/ \___|_|\___\___/|_| |_| |_|\___| (_))");
+
+        // Separator line
+        tui::drawHLine(startX, startY + 6, contentWidth, '=');
+
+        // Subtitle
+        tui::printAt(startX + 12, startY + 7, "Welcome to FitnessGO!", 14);
+
+
+        // Menu items
+        vector<string> menuItems = {
+            "Login",
+            "Register",
+            "Exit"};
+
+        // Menu position (centered-ish)
+        int menuX = startX + 18;
+        int menuY = startY + 9;
+
+        int choice = tui::showMenu(menuX, menuY, menuItems);
+
+        // Controller hints
+        int hintY = menuY + menuItems.size() + 2;
+        tui::drawHLine(startX, hintY, contentWidth, '-');
+        tui::printAt(startX + 4, hintY + 1, "UP / DOWN : Navigate    ENTER : Select", 8);
+
+        // Navigation
+        switch (choice)
+        {
+        case 0:
+            return ScreenData<NoData>{Screen::Login, NoData{}};
+
+        case 1:
+            return ScreenData<NoData>{Screen::Register, NoData{}};
+
+        default:
+            return ScreenData<NoData>{Screen::Exit, NoData{}};
+        }
     }
 
     ScreenData<NoData> LoginScreen()
