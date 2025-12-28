@@ -61,7 +61,7 @@ public:
             tui::printAt(startX, startY + 5, "No exercises found.", 12);
             tui::printAt(startX, startY + 7, "Press any key to return...", 8);
             getch();
-            return ScreenData{Screen::Welcome, -1};
+            return ScreenData{Screen::ExerciseList, NoData{}};
         }
 
         // Build menu items
@@ -75,62 +75,66 @@ public:
         int menuX = startX + 5;
         int menuY = startY + 5;
 
-        // Show menu
-        int choice = tui::showMenu(menuX, menuY, menuItems);
-
         // Controller hints below menu
         int hintY = menuY + menuItems.size() + 2;
         tui::drawHLine(startX, hintY, contentWidth, '-');
         tui::printAt(startX + 4, hintY + 1, "UP / DOWN : Navigate    ENTER : Select", 8);
 
+        // Show menu
+        int choice = tui::showMenu(menuX, menuY, menuItems);
+
+        if (choice == -1)
+            return ScreenData{Screen::ExerciseList, NoData{}};
 
         // Return screen and selected exercise index
         return ScreenData{Screen::ExerciseDetail, exercises[choice].id};
     }
 
-// --- Exercise Detail Screen ---
-ScreenData ExerciseDetailScreen(int exerciseId)
-{
-    system("cls");
-
-    int startX = 5, startY = 2;
-    const int contentWidth = 60;
-
-    // Fetch exercise by ID
-    auto exerciseOpt = exerciseService.getExerciseById(exerciseId);
-    if (!exerciseOpt.has_value())
+    // --- Exercise Detail Screen ---
+    ScreenData ExerciseDetailScreen(int exerciseId)
     {
-        tui::printAt(startX, startY, "Exercise not found!", 12);
-        tui::printAt(startX, startY + 2, "Press any key to return...", 8);
-        getch();
+        system("cls");
+
+        int startX = 5, startY = 2;
+        const int contentWidth = 60;
+
+        // Fetch exercise by ID
+        auto exerciseOpt = exerciseService.getExerciseById(exerciseId);
+        if (!exerciseOpt.has_value())
+        {
+            tui::printAt(startX, startY, "Exercise not found!", 12);
+            tui::printAt(startX, startY + 2, "Press any key to return...", 8);
+            getch();
+            return ScreenData{Screen::ExerciseList, NoData{}};
+        }
+
+        const Exercise &exercise = exerciseOpt.value();
+
+        // Title
+        tui::printAt(startX, startY, "=== Exercise Details ===", 14);
+        tui::drawHLine(startX, startY + 1, contentWidth, '=');
+
+        // Content
+        tui::printAt(startX, startY + 3, "Name: " + exercise.name, 11);
+        tui::printAt(startX, startY + 5, "Description: " + exercise.description, 11);
+        tui::printAt(startX, startY + 7, "Path: " + exercise.path, 11);
+
+        // Controller hints (AuthUI style)
+        int hintY = startY + 10;
+        tui::drawHLine(startX, hintY, contentWidth, '-');
+        tui::printAt(startX + 4, hintY + 1, "Enter : View    ESC : Return", 8);
+
+        while (true)
+        {
+            int key = getch();
+            if (key == 27) // ESC
+                break;
+            else if (key == 13)
+            {
+                system(("start \"\" animation.exe \"AsciFrames/" + exercise.name + "\"").c_str());
+            }
+        }
+
         return ScreenData{Screen::ExerciseList, NoData{}};
     }
-
-    const Exercise &exercise = exerciseOpt.value();
-
-    // Title
-    tui::printAt(startX, startY, "=== Exercise Details ===", 14);
-    tui::drawHLine(startX, startY + 1, contentWidth, '=');
-
-    // Content
-    tui::printAt(startX, startY + 3, "Name: " + exercise.name, 11);
-    tui::printAt(startX, startY + 5, "Description: " + exercise.description, 11);
-    tui::printAt(startX, startY + 7, "Path: " + exercise.path, 11);
-
-    // Controller hints (AuthUI style)
-    int hintY = startY + 10;
-    tui::drawHLine(startX, hintY, contentWidth, '-');
-    tui::printAt(startX + 4, hintY + 1, "ESC : Return", 8);
-
-    // Wait for ESC
-    while (true)
-    {
-        int key = getch();
-        if (key == 27) // ESC
-            break;
-    }
-    // Return screen only
-    return ScreenData{Screen::ExerciseList, NoData{}};
-}
-
 };

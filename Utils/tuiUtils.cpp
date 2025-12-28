@@ -311,7 +311,7 @@ namespace tui
                 textattr(i == selected ? 112 : 7);
                 cout << items[i] << "   ";
             }
-
+            textattr(7);
             char key = getch();
             if (key == -32)
             {
@@ -323,6 +323,8 @@ namespace tui
             }
             else if (key == 13)
                 return selected;
+            else if (key == 27)
+                return -1;
         }
     }
 }

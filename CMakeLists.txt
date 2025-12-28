@@ -41,3 +41,10 @@ add_custom_command(TARGET FitnessGo POST_BUILD
         $<TARGET_FILE_DIR:FitnessGo>/AsciFrames
 )
 
+# Copy animation.exe
+add_custom_command(TARGET FitnessGo POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_SOURCE_DIR}/animation.exe
+        $<TARGET_FILE_DIR:FitnessGo>/animation.exe
+)
+

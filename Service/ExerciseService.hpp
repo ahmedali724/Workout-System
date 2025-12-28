@@ -15,7 +15,6 @@ public:
     std::optional<Exercise> getExerciseById(int exerciseId);
     std::vector<Exercise> searchExercisesByName(const std::string &name);
 
-    // Optional: add, update, delete methods
     int addExercise(Exercise &exercise);
     int updateExercise(Exercise &exercise);
     int deleteExercise(int exerciseId);

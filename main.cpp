@@ -30,7 +30,7 @@ int main()
     AuthUI authUI(authService);
     ExerciseUI exerciseUI(exerciseService);
 
-    ScreenData current{Screen::Welcome, NoData{}};
+    ScreenData current{Screen::ExerciseList, NoData{}};
 
     while (current.nextScreen != Screen::Exit)
     {
