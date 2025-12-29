@@ -35,7 +35,6 @@ public:
         // Subtitle
         tui::printAt(startX + 12, startY + 7, "Welcome to FitnessGO!", 14);
 
-
         // Menu items
         vector<string> menuItems = {
             "Login",
@@ -140,6 +139,7 @@ public:
         tui::printAt(startX, startY + 10, "Age:", 7);
         tui::printAt(startX, startY + 12, "Gender (Male/Female):", 7);
         tui::printAt(startX, startY + 14, "Role (Trainee/Trainer):", 7);
+        tui::printAt(startX, startY + 16, "Availability (1/0):", 7);
 
         // Error message area
         int errX = startX;
@@ -158,6 +158,7 @@ public:
             startX + 26,
             startX + 26,
             startX + 26,
+            startX + 26,
             startX + 26};
 
         vector<int> fieldY = {
@@ -167,11 +168,12 @@ public:
             startY + 8,
             startY + 10,
             startY + 12,
-            startY + 14};
+            startY + 14,
+            startY + 16};
 
-        vector<int> fieldLenVec(7, fieldLen);
-        vector<char> sRange(7, '!');
-        vector<char> eRange(7, '~');
+        vector<int> fieldLenVec(8, fieldLen);
+        vector<char> sRange(8, '!');
+        vector<char> eRange(8, '~');
 
         vector<string> initialData = {};
 
@@ -182,7 +184,7 @@ public:
                     fieldX,
                     fieldY,
                     fieldLenVec,
-                    7,
+                    8,
                     sRange,
                     eRange,
                     initialData);
@@ -197,6 +199,7 @@ public:
             try
             {
                 int age = stoi(results[4]);
+                bool availability = stoi(results[7]);
 
                 User newUser(
                     0,          // ID ignored (auto-generated)
@@ -206,7 +209,8 @@ public:
                     results[3], // name
                     age,
                     results[5], // gender
-                    results[6]  // role
+                    results[6],// role
+                    availability
                 );
 
                 if (authService.registerUser(newUser) > 0)
