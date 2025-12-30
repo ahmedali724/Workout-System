@@ -15,7 +15,4 @@ public:
     std::optional<Exercise> getExerciseById(int exerciseId);
     std::vector<Exercise> searchExercisesByName(const std::string &name);
 
-    int addExercise(Exercise &exercise);
-    int updateExercise(Exercise &exercise);
-    int deleteExercise(int exerciseId);
 };

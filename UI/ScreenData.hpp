@@ -1,14 +1,19 @@
 #pragma once
 #include <any>
+#include "User.hpp"
 
 enum class Screen
 {
     Welcome,
     Login,
     Register,
-    MainMenu,
+    TraineeMenu,
+    TrainerMenu,
     ExerciseList,
     ExerciseDetail,
+    ChangePassword,
+    UpdateProfile,
+    AdminMenu,
     Exit
 
 };

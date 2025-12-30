@@ -2,7 +2,6 @@
 
 ExerciseService::ExerciseService(DB &database) : db(database) {}
 
-
 std::vector<Exercise> ExerciseService::getAllExercises() {
     return db.queryPrepared<Exercise>(
         "SELECT id, name, description, path FROM Exercise;",
@@ -15,7 +14,6 @@ std::vector<Exercise> ExerciseService::getAllExercises() {
             };
         });
 }
-
 
 std::optional<Exercise> ExerciseService::getExerciseById(int exerciseId) {
     auto exercises = db.queryPrepared<Exercise>(
@@ -36,7 +34,6 @@ std::optional<Exercise> ExerciseService::getExerciseById(int exerciseId) {
     return std::nullopt;
 }
 
-
 std::vector<Exercise> ExerciseService::searchExercisesByName(const std::string &name) {
     return db.queryPrepared<Exercise>(
         "SELECT id, name, description, path FROM Exercise WHERE name LIKE ?;",
@@ -51,4 +48,3 @@ std::vector<Exercise> ExerciseService::searchExercisesByName(const std::string &
         "%" + name + "%"
     );
 }
-

@@ -12,6 +12,16 @@ CREATE TABLE IF NOT EXISTS "User" (
     availability INTEGER DEFAULT 1 CHECK(availability IN (0, 1))
 );
 
+CREATE TABLE IF NOT EXISTS Trainee (
+    user_id INTEGER PRIMARY KEY,
+    FOREIGN KEY(user_id) REFERENCES "User"(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Trainer (
+    user_id INTEGER PRIMARY KEY,
+    FOREIGN KEY(user_id) REFERENCES "User"(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS Exercise (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
@@ -29,17 +39,13 @@ CREATE TABLE IF NOT EXISTS Message (
     FOREIGN KEY(receiver_id) REFERENCES "User"(id) ON DELETE CASCADE
 );
 
-
 CREATE TABLE IF NOT EXISTS UserWorkout (
-
     user_id INTEGER NOT NULL,
     exercise_id INTEGER NOT NULL,
     FOREIGN KEY(user_id) REFERENCES "User"(id) ON DELETE CASCADE,
     FOREIGN KEY(exercise_id) REFERENCES Exercise(id) ON DELETE CASCADE,
     PRIMARY KEY(user_id, exercise_id)
-
 );
-
 
 CREATE TABLE IF NOT EXISTS TraineeAssignedPlan (
     trainee_id INTEGER NOT NULL,
@@ -48,24 +54,16 @@ CREATE TABLE IF NOT EXISTS TraineeAssignedPlan (
     sets INTEGER DEFAULT 3,
     reps INTEGER DEFAULT 10,
     completed INTEGER DEFAULT 0 CHECK(completed IN (0, 1)),
-    FOREIGN KEY(trainee_id) REFERENCES "User"(id) ON DELETE CASCADE,
-    FOREIGN KEY(trainer_id) REFERENCES "User"(id) ON DELETE CASCADE,
+    FOREIGN KEY(trainee_id) REFERENCES Trainee(user_id) ON DELETE CASCADE,
+    FOREIGN KEY(trainer_id) REFERENCES Trainer(user_id) ON DELETE CASCADE,
     FOREIGN KEY(exercise_id) REFERENCES Exercise(id) ON DELETE CASCADE,
-    PRIMARY KEY(trainee_id, trainer_id,exercise_id)
+    PRIMARY KEY(trainee_id, trainer_id, exercise_id)
 );
-
 
 CREATE TABLE IF NOT EXISTS TraineeTrainer (
-
     trainee_id INTEGER NOT NULL,
     trainer_id INTEGER NOT NULL,
-
-    FOREIGN KEY(trainee_id) REFERENCES "User"(id) ON DELETE CASCADE,
-    FOREIGN KEY(trainer_id) REFERENCES "User"(id) ON DELETE CASCADE,
+    FOREIGN KEY(trainee_id) REFERENCES Trainee(user_id) ON DELETE CASCADE,
+    FOREIGN KEY(trainer_id) REFERENCES Trainer(user_id) ON DELETE CASCADE,
     PRIMARY KEY(trainee_id, trainer_id)
-
 );
-
-
-
-
