@@ -442,4 +442,132 @@ public:
 
     return ScreenData{Screen::TraineeMenu, currentUser};
   }
+
+  // --- Messages Screen ---
+  ScreenData MessagesScreen()
+  {
+    system("cls");
+
+    int startX = 5, startY = 2;
+    const int contentWidth = 70;
+
+    // Title
+    tui::printAt(startX, startY, "=== Messages ===", 14);
+    tui::drawHLine(startX, startY + 1, contentWidth, '=');
+
+    std::vector<std::string> menuItems = {
+        "View Inbox",
+        "Send Message to Trainer",
+        "Back"};
+
+    int menuX = startX + 15;
+    int menuY = startY + 4;
+
+    int choice = tui::showMenu(menuX, menuY, menuItems);
+
+    switch (choice)
+    {
+    case 0: // View Inbox
+      return ViewInboxScreen();
+    case 1: // Send Message
+      return SendMessageScreen();
+    default:
+      return ScreenData{Screen::TraineeMenu, currentUser};
+    }
+  }
+
+  // --- View Inbox Screen ---
+  ScreenData ViewInboxScreen()
+  {
+    system("cls");
+
+    int startX = 5, startY = 2;
+    const int contentWidth = 70;
+
+    // Title
+    tui::printAt(startX, startY, "=== Inbox ===", 14);
+    tui::drawHLine(startX, startY + 1, contentWidth, '=');
+
+    auto messages = messageService.getInbox(currentUser.id);
+
+    if (messages.empty())
+    {
+      tui::printAt(startX, startY + 3, "No messages.", 12);
+      tui::printAt(startX, startY + 5, "Press any key to return...", 8);
+      getch();
+      return MessagesScreen();
+    }
+
+    // Display messages
+    int y = startY + 3;
+    for (const auto &msg : messages)
+    {
+      tui::printAt(startX, y, "From: " + msg.sender_name, 11);
+      tui::printAt(startX, y + 1, "Time: " + msg.timestamp, 7);
+      tui::printAt(startX, y + 2, "Message: " + msg.content, 7);
+      y += 4;
+    }
+
+    int hintY = y + 2;
+    tui::drawHLine(startX, hintY, contentWidth, '-');
+    tui::printAt(startX + 4, hintY + 1, "Press any key to return...", 8);
+    getch();
+
+    return MessagesScreen();
+  }
+
+  // --- Send Message Screen ---
+  ScreenData SendMessageScreen()
+  {
+    system("cls");
+
+    int startX = 10, startY = 5;
+    int fieldLen = 40;
+
+    // Title
+    tui::printAt(startX, startY, "=== Send Message ===", 14);
+
+    // Get assigned trainer
+    auto trainerOpt = traineeService.getAssignedTrainer(currentUser.id);
+    if (!trainerOpt.has_value())
+    {
+      tui::printAt(startX, startY + 2, "You don't have an assigned trainer.", 12);
+      tui::printAt(startX, startY + 4, "Press any key to return...", 8);
+      getch();
+      return MessagesScreen();
+    }
+
+    User trainer = trainerOpt.value();
+    tui::printAt(startX, startY + 2, "To: " + trainer.name, 11);
+    tui::printAt(startX, startY + 4, "Message:", 7);
+
+    // Get message content
+    std::vector<int> fieldX = {startX + 10};
+    std::vector<int> fieldY = {startY + 4};
+    std::vector<int> fieldLenVec = {fieldLen};
+    std::vector<char> sRange = {' '};
+    std::vector<char> eRange = {'~'};
+    std::vector<std::string> initialData = {""};
+
+    std::vector<std::string> results = tui::addMultiTextField(
+        fieldX, fieldY, fieldLenVec, 1, sRange, eRange, initialData);
+
+    if (results.empty() || results[0].empty())
+    {
+      return MessagesScreen();
+    }
+
+    if (messageService.sendMessage(currentUser.id, trainer.id, results[0]) > 0)
+    {
+      tui::printAt(startX, startY + 7, "Message sent successfully!", 10);
+    }
+    else
+    {
+      tui::printAt(startX, startY + 7, "Failed to send message.", 12);
+    }
+    tui::printAt(startX, startY + 8, "Press any key to continue...", 8);
+    getch();
+
+    return MessagesScreen();
+  }
 }
