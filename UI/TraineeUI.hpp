@@ -570,4 +570,97 @@ public:
 
     return MessagesScreen();
   }
-}
+
+  // --- Export Workout Plan Screen ---
+  ScreenData ExportWorkoutPlanScreen()
+  {
+    system("cls");
+
+    int startX = 10, startY = 5;
+    int fieldLen = 30;
+
+    // Title
+    tui::printAt(startX, startY, "=== Export Workout Plan ===", 14);
+
+    tui::printAt(startX, startY + 2, "Enter filename (e.g., workout_plan.txt):", 7);
+
+    std::vector<int> fieldX = {startX + 45};
+    std::vector<int> fieldY = {startY + 2};
+    std::vector<int> fieldLenVec = {fieldLen};
+    auto textRange = UIHelpers::getTextRange();
+    std::vector<char> sRange = {textRange[0]};
+    std::vector<char> eRange = {textRange[1]};
+    std::vector<std::string> initialData = {""};
+
+    std::vector<std::string> results = tui::addMultiTextField(
+        fieldX, fieldY, fieldLenVec, 1, sRange, eRange, initialData);
+
+    if (results.empty() || results[0].empty())
+    {
+      return ScreenData{Screen::TraineeMenu, currentUser};
+    }
+
+    if (traineeService.exportWorkoutPlanToFile(currentUser.id, results[0]))
+    {
+      tui::printAt(startX, startY + 5, "Workout plan exported successfully!", 10);
+    }
+    else
+    {
+      tui::printAt(startX, startY + 5, "Failed to export workout plan.", 12);
+    }
+    tui::printAt(startX, startY + 6, "Press any key to continue...", 8);
+    getch();
+
+    return ScreenData{Screen::TraineeMenu, currentUser};
+  }
+
+  // --- Profile Screen ---
+  ScreenData ProfileScreen()
+  {
+    system("cls");
+
+    int startX = 10, startY = 5;
+    const int contentWidth = 50;
+
+    // Title
+    tui::printAt(startX, startY, "=== My Profile ===", 14);
+    tui::drawHLine(startX, startY + 1, contentWidth, '=');
+
+    // Display user info
+    tui::printAt(startX, startY + 3, "Name: " + currentUser.name, 11);
+    tui::printAt(startX, startY + 4, "Username: " + currentUser.username, 11);
+    tui::printAt(startX, startY + 5, "Email: " + currentUser.email, 11);
+    tui::printAt(startX, startY + 6, "Age: " + std::to_string(currentUser.age), 11);
+    tui::printAt(startX, startY + 7, "Gender: " + currentUser.gender, 11);
+    tui::printAt(startX, startY + 8, "Role: " + currentUser.role, 11);
+
+    // Menu options
+    std::vector<std::string> menuItems = {"Update Profile", "Change Password", "Back"};
+    int menuX = startX + 15;
+    int menuY = startY + 11;
+
+    int choice = tui::showMenu(menuX, menuY, menuItems);
+
+    switch (choice)
+    {
+    case 0: // Update Profile
+      return UpdateProfileScreen();
+    case 1: // Change Password
+      return ChangePasswordScreen();
+    default:
+      return ScreenData{Screen::TraineeMenu, currentUser};
+    }
+  }
+
+  // --- Update Profile Screen ---
+  ScreenData UpdateProfileScreen()
+  {
+    return ScreenData{Screen::UpdateProfile, currentUser};
+  }
+
+  // --- Change Password Screen ---
+  ScreenData ChangePasswordScreen()
+  {
+    return ScreenData{Screen::ChangePassword, currentUser};
+  }
+};
