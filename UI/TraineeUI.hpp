@@ -261,4 +261,185 @@ public:
 
     return ScreenData{Screen::TraineeMenu, currentUser};
   }
+
+  // --- View Workout Plan Screen ---
+  ScreenData ViewWorkoutPlanScreen()
+  {
+    system("cls");
+
+    int startX = 5, startY = 2;
+    const int contentWidth = 70;
+
+    // Title
+    tui::printAt(startX, startY, "=== My Workout Plan ===", 14);
+    tui::drawHLine(startX, startY + 1, contentWidth, '=');
+
+    auto plan = traineeService.getCurrentWorkoutPlan(currentUser.id);
+
+    if (plan.empty())
+    {
+      tui::printAt(startX, startY + 3, "No workout plan assigned yet.", 12);
+      tui::printAt(startX, startY + 5, "Press any key to return...", 8);
+      getch();
+      return ScreenData{Screen::TraineeMenu, currentUser};
+    }
+
+    // Display workout plan
+    int y = startY + 3;
+    for (const auto &item : plan)
+    {
+      tui::printAt(startX, y, "Exercise: " + item.exercise_name, 11);
+      tui::printAt(startX, y + 1, "Sets: " + std::to_string(item.sets) + "  Reps: " + std::to_string(item.reps), 7);
+      // std::string status = item.completed ? "Completed" : "Pending";
+      // tui::printAt(startX, y + 2, "Status: " + status, item.completed ? 10 : 14);
+      y += 4;
+    }
+
+    int hintY = y + 2;
+    tui::drawHLine(startX, hintY, contentWidth, '-');
+    tui::printAt(startX + 4, hintY + 1, "Press any key to return...", 8);
+    getch();
+
+    return ScreenData{Screen::TraineeMenu, currentUser};
+  }
+
+  // --- Manage Custom List Screen ---
+  ScreenData ManageCustomListScreen()
+  {
+    system("cls");
+
+    int startX = 5, startY = 2;
+    const int contentWidth = 70;
+
+    // Title
+    tui::printAt(startX, startY, "=== Manage Custom List ===", 14);
+    tui::drawHLine(startX, startY + 1, contentWidth, '=');
+
+    // Get list name (simplified - using default list name)
+    std::string listName = "My Exercises";
+    auto exercises = traineeService.getCustomListExercises(currentUser.id, listName);
+
+    std::vector<std::string> menuItems;
+    for (const auto &ex : exercises)
+    {
+      menuItems.push_back(ex.exercise_name);
+    }
+    menuItems.push_back("Add Exercise");
+    menuItems.push_back("Delete List");
+    menuItems.push_back("Back");
+
+    int menuX = startX + 5;
+    int menuY = startY + 4;
+
+    int hintY = menuY + menuItems.size() + 2;
+    tui::drawHLine(startX, hintY, contentWidth, '-');
+    tui::printAt(startX + 4, hintY + 1, "UP / DOWN : Navigate    ENTER : Select", 8);
+
+    int choice = tui::showMenu(menuX, menuY, menuItems);
+
+    if (choice == -1 || choice == menuItems.size() - 1)
+    {
+      return ScreenData{Screen::TraineeMenu, currentUser};
+    }
+
+    if (choice == menuItems.size() - 3) // Add Exercise
+    {
+      return AddExerciseToListScreen(listName);
+    }
+    else if (choice == menuItems.size() - 2) // Delete List
+    {
+      if (traineeService.deleteCustomList(currentUser.id, listName) > 0)
+      {
+        tui::printAt(startX, hintY + 3, "List deleted successfully!", 10);
+      }
+      else
+      {
+        tui::printAt(startX, hintY + 3, "Failed to delete list.", 12);
+      }
+      tui::printAt(startX, hintY + 4, "Press any key to continue...", 8);
+      getch();
+      return ScreenData{Screen::TraineeMenu, currentUser};
+    }
+    else if (choice < exercises.size()) // Remove exercise
+    {
+      if (traineeService.removeExerciseFromCustomList(currentUser.id, exercises[choice].exercise_id, listName) > 0)
+      {
+        tui::printAt(startX, hintY + 3, "Exercise removed from list!", 10);
+      }
+      else
+      {
+        tui::printAt(startX, hintY + 3, "Failed to remove exercise.", 12);
+      }
+      tui::printAt(startX, hintY + 4, "Press any key to continue...", 8);
+      getch();
+      return ManageCustomListScreen();
+    }
+
+    return ScreenData{Screen::TraineeMenu, currentUser};
+  }
+
+  // --- Add Exercise to List Screen ---
+  ScreenData AddExerciseToListScreen(const std::string &listName)
+  {
+    system("cls");
+
+    int startX = 5, startY = 2;
+    const int contentWidth = 70;
+
+    // Title
+    tui::printAt(startX, startY, "=== Add Exercise to List ===", 14);
+    tui::drawHLine(startX, startY + 1, contentWidth, '=');
+
+    // Get all exercises
+    auto allExercises = exerciseService.getAllExercises();
+
+    std::vector<std::string> menuItems;
+    for (const auto &ex : allExercises)
+    {
+      menuItems.push_back(ex.name);
+    }
+    menuItems.push_back("Back");
+
+    int menuX = startX + 5;
+    int menuY = startY + 4;
+
+    int choice = tui::showMenu(menuX, menuY, menuItems);
+
+    if (choice == -1 || choice == menuItems.size() - 1)
+    {
+      return ManageCustomListScreen();
+    }
+
+    if (traineeService.addExerciseToCustomList(currentUser.id, allExercises[choice].id, listName) > 0)
+    {
+      tui::printAt(startX, menuY + menuItems.size() + 2, "Exercise added to list!", 10);
+    }
+    else
+    {
+      tui::printAt(startX, menuY + menuItems.size() + 2, "Failed to add exercise.", 12);
+    }
+    tui::printAt(startX, menuY + menuItems.size() + 3, "Press any key to continue...", 8);
+    getch();
+
+    return ManageCustomListScreen();
+  }
+
+  // --- Create Custom List Screen ---
+  ScreenData CreateCustomListScreen()
+  {
+    system("cls");
+
+    int startX = 10, startY = 5;
+    int fieldLen = 25;
+
+    // Title
+    tui::printAt(startX, startY, "=== Create Custom List ===", 14);
+
+    // Note: Since UserWorkout doesn't support list names, this is simplified
+    tui::printAt(startX, startY + 2, "Note: Custom lists are managed through your exercise collection.", 7);
+    tui::printAt(startX, startY + 4, "Press any key to return...", 8);
+    getch();
+
+    return ScreenData{Screen::TraineeMenu, currentUser};
+  }
 }
