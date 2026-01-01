@@ -192,16 +192,21 @@ public:
     std::string avail = trainer.availability ? "Available" : "Not Available";
     tui::printAt(startX, startY + 7, "Availability: " + avail, 11);
 
-    // Controller hints
     int hintY = startY + 10;
     tui::drawHLine(startX, hintY, contentWidth, '-');
     tui::printAt(startX + 4, hintY + 1, "Press J To Join | Any To Back", 8);
 
     int key = getch();
 
-    if (key == 'j')
+    if (key == 'j' || key == 'J')
     {
-      traineeService.joinTrainer(currentUser.id, trainerId);
+      int result = traineeService.joinTrainer(currentUser.id, trainerId);
+
+      if (result <= 0)
+      {
+        tui::printAt(startX + 4, hintY + 3, "Error: Could not join this trainer.", 12);
+        getch();
+      }
     }
 
     return ScreenData{Screen::TraineeMenu, currentUser};
