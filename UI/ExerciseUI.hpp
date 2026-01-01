@@ -133,7 +133,7 @@ public:
                 break;
             else if (key == 13)
             {
-                system(("start \"\" animation.exe \"AsciFrames/" + exercise.name + "\"").c_str());
+                system(("start \"\" animation.exe \"ASCIIFrames/" + exercise.name + "\"").c_str());
             }
         }
 

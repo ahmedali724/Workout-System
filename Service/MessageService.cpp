@@ -1,5 +1,6 @@
 #include "MessageService.hpp"
 #include <string>
+#include "Mappers.hpp"
 
 int MessageService::sendMessage(int senderId, int receiverId, const std::string &content) {
     std::string sql = "INSERT INTO Message (sender_id, receiver_id, content) VALUES (?, ?, ?);";
@@ -15,17 +16,7 @@ std::vector<Message> MessageService::getInbox(int userId) {
         "INNER JOIN User r ON m.receiver_id = r.id "
         "WHERE m.receiver_id=? "
         "ORDER BY m.timestamp DESC;",
-        [](sqlite3_stmt *s) {
-            return Message{
-                sqlite3_column_int(s, 0),
-                sqlite3_column_int(s, 1),
-                sqlite3_column_int(s, 2),
-                (const char *)sqlite3_column_text(s, 3),
-                (const char *)sqlite3_column_text(s, 4),
-                (const char *)sqlite3_column_text(s, 5),
-                (const char *)sqlite3_column_text(s, 6)
-            };
-        },
+        Mappers::mapMessage,
         userId);
 }
 

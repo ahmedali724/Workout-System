@@ -11,6 +11,18 @@ VALUES
 -- Admin
 ('admin1', 'adminpass', 'admin@mail.com', 'System Admin', 35, 'Male', 'Admin');
 
+-- Exercises
+INSERT INTO "main"."Exercise" ("id", "name", "description", "path") VALUES (1, 'Push-Up', 'A basic upper body exercise focusing on chest and triceps.', 'exercises/pushup.mp4');
+INSERT INTO "main"."Exercise" ("id", "name", "description", "path") VALUES (2, 'Squat', 'Lower body exercise targeting quadriceps, hamstrings, and glutes.', 'exercises/squat.mp4');
+INSERT INTO "main"."Exercise" ("id", "name", "description", "path") VALUES (3, 'Plank', 'Core-strengthening exercise maintaining a push-up position.', 'exercises/plank.mp4');
+INSERT INTO "main"."Exercise" ("id", "name", "description", "path") VALUES (4, 'Lunge', 'Lower body exercise for legs and glutes, performed by stepping forward.', 'exercises/lunge.mp4');
+INSERT INTO "main"."Exercise" ("id", "name", "description", "path") VALUES (5, 'Burpee', 'Full body exercise combining squat, push-up, and jump.', 'exercises/burpee.mp4');
+INSERT INTO "main"."Exercise" ("id", "name", "description", "path") VALUES (6, 'Crunch', 'Abdominal exercise focusing on core strength.', 'exercises/crunch.mp4');
+INSERT INTO "main"."Exercise" ("id", "name", "description", "path") VALUES (7, 'Mountain Climber', 'Cardio-core exercise simulating climbing movement.', 'exercises/mountain_climber.mp4');
+INSERT INTO "main"."Exercise" ("id", "name", "description", "path") VALUES (8, 'Jumping Jack', 'Full body cardio exercise involving jumping and arm movements.', 'exercises/jumping_jack.mp4');
+INSERT INTO "main"."Exercise" ("id", "name", "description", "path") VALUES (9, 'Bicep Curl', 'Arm exercise targeting the biceps using dumbbells.', 'exercises/bicep_curl.mp4');
+INSERT INTO "main"."Exercise" ("id", "name", "description", "path") VALUES (10, 'Tricep Dip', 'Upper body exercise targeting triceps using a bench or chair.', 'exercises/tricep_dip.mp4');
+
 
 
 -- Trainees
@@ -78,5 +90,6 @@ VALUES
     (SELECT id FROM "User" WHERE username = 'trainer1'),
     'Thanks coach!'
 );
+
 
 

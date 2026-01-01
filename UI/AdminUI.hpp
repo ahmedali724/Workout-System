@@ -13,7 +13,7 @@ public:
     AdminService &adminService;
     User currentUser;
 
-    AdminUI(AdminService &_adminService, User _user) 
+    AdminUI(AdminService &_adminService, User _user)
         : adminService(_adminService), currentUser(_user) {}
 
     // --- Admin Main Menu Screen ---
@@ -33,8 +33,7 @@ public:
             "Create Admin Account",
             "Generate Reports",
             "View/Update Profile",
-            "Logout"
-        };
+            "Logout"};
 
         int menuX = startX + 12;
         int menuY = startY + 7;
@@ -245,8 +244,7 @@ public:
         tui::printAt(startX, startY + 8, "Name:", 7);
         tui::printAt(startX, startY + 10, "Age:", 7);
         tui::printAt(startX, startY + 12, "Gender (Male/Female):", 7);
-        tui::printAt(startX, startY + 14, "Role (Trainee/Trainer/Admin):", 7);
-        tui::printAt(startX, startY + 16, "Availability (1/0):", 7);
+        tui::printAt(startX, startY + 14, "Availability (1/0):", 7);
 
         // Error message area
         int errX = startX;
@@ -265,27 +263,24 @@ public:
             user.name,
             std::to_string(user.age),
             user.gender,
-            user.role,
-            std::to_string(user.availability ? 1 : 0)
-        };
+            std::to_string(user.availability ? 1 : 0)};
 
         // Multi-field configuration
-        std::vector<int> fieldX(8, startX + 30);
+        std::vector<int> fieldX(7, startX + 30);
         std::vector<int> fieldY = {
             startY + 2, startY + 4, startY + 6, startY + 8,
-            startY + 10, startY + 12, startY + 14, startY + 16
-        };
+            startY + 10, startY + 12, startY + 14};
         std::vector<int> fieldLenVec(8, fieldLen);
         auto textRange = UIHelpers::getTextRange();
         auto ageRange = UIHelpers::getAgeRange();
         auto availRange = UIHelpers::getAvailabilityRange();
-        std::vector<char> sRange = {textRange[0], textRange[0], textRange[0], textRange[0], ageRange[0], textRange[0], textRange[0], availRange[0]};
-        std::vector<char> eRange = {textRange[1], textRange[1], textRange[1], textRange[1], ageRange[1], textRange[1], textRange[1], availRange[1]};
+        std::vector<char> sRange = {textRange[0], textRange[0], textRange[0], textRange[0], ageRange[0], textRange[0],availRange[0]};
+        std::vector<char> eRange = {textRange[1], textRange[1], textRange[1], textRange[1], ageRange[1], textRange[1],availRange[1]};
 
         while (true)
         {
             std::vector<std::string> results = tui::addMultiTextField(
-                fieldX, fieldY, fieldLenVec, 8, sRange, eRange, initialData);
+                fieldX, fieldY, fieldLenVec, 7, sRange, eRange, initialData);
 
             if (results.empty())
             {
@@ -298,9 +293,9 @@ public:
             bool availability;
             if (!UIHelpers::validateAge(results[4], age))
             {
-                errorMessage = "Age must be a single digit (0-9)!";
+                errorMessage = "Age must be 12 or more !";
             }
-            else if (!UIHelpers::validateAvailability(results[7], availability))
+            else if (!UIHelpers::validateAvailability(results[6], availability))
             {
                 errorMessage = "Availability must be 0 or 1!";
             }
@@ -314,9 +309,8 @@ public:
                     results[3],
                     age,
                     results[5],
-                    results[6],
-                    availability
-                );
+                    user.role,
+                    availability);
 
                 if (adminService.updateUser(updatedUser) > 0)
                 {
@@ -410,14 +404,13 @@ public:
         std::vector<int> fieldX(7, startX + 26);
         std::vector<int> fieldY = {
             startY + 2, startY + 4, startY + 6, startY + 8,
-            startY + 10, startY + 12, startY + 14
-        };
+            startY + 10, startY + 12, startY + 14};
         std::vector<int> fieldLenVec(7, fieldLen);
         auto textRange = UIHelpers::getTextRange();
         auto ageRange = UIHelpers::getAgeRange();
         auto availRange = UIHelpers::getAvailabilityRange();
-        std::vector<char> sRange = {textRange[0], textRange[0], textRange[0], ageRange[0], textRange[0], textRange[0], availRange[0]};
-        std::vector<char> eRange = {textRange[1], textRange[1], textRange[1], ageRange[1], textRange[1], textRange[1], availRange[1]};
+        std::vector<char> sRange = {textRange[0], textRange[0], textRange[0], textRange[0], ageRange[0], textRange[0], availRange[0]};
+        std::vector<char> eRange = {textRange[1], textRange[1], textRange[1], textRange[1], ageRange[1], textRange[1], availRange[1]};
         std::vector<std::string> initialData = {};
 
         while (true)
@@ -436,7 +429,7 @@ public:
             bool availability;
             if (!UIHelpers::validateAge(results[4], age))
             {
-                errorMessage = "Age must be a single digit (0-9)!";
+                errorMessage = "Age must be 12 or more !";
             }
             else if (!UIHelpers::validateAvailability(results[6], availability))
             {
@@ -453,8 +446,7 @@ public:
                     age,
                     results[5],
                     "Admin",
-                    availability
-                );
+                    availability);
 
                 if (adminService.createAdmin(newAdmin) > 0)
                 {
@@ -542,5 +534,3 @@ public:
         }
     }
 };
-
-

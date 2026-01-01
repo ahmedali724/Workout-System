@@ -205,7 +205,7 @@ public:
             bool availability;
             if (!UIHelpers::validateAge(results[4], age))
             {
-                errorMessage = "Age must be a single digit (0-9)!";
+                errorMessage = "Age must be 12 or more !";
             }
             else if (!UIHelpers::validateAvailability(results[7], availability))
             {
@@ -378,7 +378,7 @@ public:
             bool availability;
             if (!UIHelpers::validateAge(results[3], age))
             {
-                errorMessage = "Age must be a single digit (0-9)!";
+                errorMessage = "Age must be 12 or more !";
             }
             else if (!UIHelpers::validateAvailability(results[5], availability))
             {

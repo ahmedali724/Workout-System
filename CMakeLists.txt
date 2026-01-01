@@ -27,6 +27,12 @@ target_include_directories(FitnessGo PRIVATE
 )
 
 
+# Link Windows multimedia library (for PlaySound / mciSendString)
+if (WIN32)
+    target_link_libraries(FitnessGo PRIVATE winmm)
+endif()
+
+
 # Copy SQLite DB
 add_custom_command(TARGET FitnessGo POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -37,8 +43,8 @@ add_custom_command(TARGET FitnessGo POST_BUILD
 # Copy the 'frames' folder to the executable directory after build
 add_custom_command(TARGET FitnessGo POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/AsciFrames
-        $<TARGET_FILE_DIR:FitnessGo>/AsciFrames
+        ${CMAKE_SOURCE_DIR}/ASCIIFrames
+        $<TARGET_FILE_DIR:FitnessGo>/ASCIIFrames
 )
 
 # Copy animation.exe
@@ -48,3 +54,9 @@ add_custom_command(TARGET FitnessGo POST_BUILD
         $<TARGET_FILE_DIR:FitnessGo>/animation.exe
 )
 
+# Copy intro.wav
+add_custom_command(TARGET FitnessGo POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_SOURCE_DIR}/intro.wav
+        $<TARGET_FILE_DIR:FitnessGo>/intro.wav
+)
